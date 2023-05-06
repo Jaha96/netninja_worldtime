@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,6 @@ class WorldTime {
     late String flag; //url to and sset flag icon
     late String url; //location url for api endpoint
     late bool isDayTime;
-
 
     WorldTime(this.location, this.flag, this.url);
 
@@ -37,6 +37,16 @@ class WorldTime {
       } catch (e) {
         print('caught an error: $e');
         time = 'Could not get time data';
+      }
+    }
+
+    Stream<String> get hours async* {
+      // is this the right way to do it to run each 3 seconds?
+      while(true) {
+        await Future.delayed(Duration(seconds: 3));
+        await getTime();
+        print(toMap());
+        yield time;
       }
     }
 

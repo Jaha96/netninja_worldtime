@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:netninja_worldtime/src/models/time_model.dart';
 import 'package:netninja_worldtime/src/services/world_time.dart';
+import 'package:provider/provider.dart';
 
 
 class ChooseLocation extends StatefulWidget {
@@ -41,13 +43,10 @@ class _ChooseLocationState extends State<ChooseLocation> {
     void updateTime(int index) async {
       WorldTime worldTime = locations[index];
       await worldTime.getTime();
+      final timeModel = Provider.of<TimeModel>(context, listen: false);
+      timeModel.time = worldTime;
       //navigate to home screen
-      Navigator.pop(context, {
-        'location': worldTime.location,
-        'flag': worldTime.flag,
-        'time': worldTime.time,
-        'isDayTime': worldTime.isDayTime,
-      });
+      Navigator.pop(context);
     }
 
     debugPrint('Choose location build function run');

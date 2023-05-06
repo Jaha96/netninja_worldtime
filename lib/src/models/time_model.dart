@@ -4,9 +4,9 @@ import 'package:netninja_worldtime/src/services/world_time.dart';
 class TimeModel extends ChangeNotifier {
   late WorldTime _time;
   bool _isLoading = false;
-
+  
   TimeModel() {
-    this.time = WorldTime('', '', '');
+    _time = WorldTime('', '', '');
   }
 
   WorldTime get time => _time;

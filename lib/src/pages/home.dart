@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:netninja_worldtime/src/models/time_model.dart';
+import 'package:netninja_worldtime/src/services/world_time.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -15,10 +18,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print('Home build function run');
     final timeModel = Provider.of<TimeModel>(context);
+    WorldTime worldTime = timeModel.time;
     // data = ModalRoute.of(context)?.settings.arguments as Map;
-    final dynamic data = timeModel.time.toMap();
-    print(data);
+    final dynamic data = worldTime.toMap();
+    // print(data);
 
     // set background
     String bgImage = data['isDayTime'] ? 'day.png': 'night.png';
@@ -68,18 +73,39 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 SizedBox(height: 20.0),
-                Text(
-                  data['time'],
-                  style: const TextStyle(
-                    fontSize: 56.0,
-                    color: Colors.white
-                  ),
+                StreamProvider<String>(
+                  key: UniqueKey(),
+                  create: (context) => worldTime.hours,
+                  builder: (context, child) => TimeWidget(),
+                  initialData: data['time'],
                 )
               ],
             ),
           ),
         )
       ),
+    );
+  }
+}
+
+class TimeWidget extends StatelessWidget {
+  const TimeWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print('TimeWidget build function run');
+    return Consumer<String>(
+      builder: (context, String time, child) {
+        return Text(
+        time,
+        style: const TextStyle(
+          fontSize: 56.0,
+          color: Colors.white
+        ),
+      );
+      }
     );
   }
 }
