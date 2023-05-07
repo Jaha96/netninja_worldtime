@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:netninja_worldtime/src/pages/loading.dart';
 
 class WorldTime {
 
@@ -43,7 +42,7 @@ class WorldTime {
     Stream<String> get hours async* {
       // is this the right way to do it to run each 3 seconds?
       while(true) {
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 3));
         await getTime();
         print(toMap());
         yield time;

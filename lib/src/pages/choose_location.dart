@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:netninja_worldtime/src/models/time_model.dart';
 import 'package:netninja_worldtime/src/services/world_time.dart';
 import 'package:provider/provider.dart';
@@ -17,18 +20,18 @@ class _ChooseLocationState extends State<ChooseLocation> {
   @override
   void initState() {
     super.initState();
-    print('Choose location initstate function run');
+    debugPrint('Choose location initstate function run');
   }
 
   @override
   void dispose() {
-    print('Choose location dispose function run');
+    debugPrint('Choose location dispose function run');
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-
+  build(BuildContext context) {
+    final timeModel = Provider.of<TimeModel>(context, listen: false);
     List<WorldTime> locations = [
 	    WorldTime('London','united-kingdom','Europe/London'),
       WorldTime('Athens','greece','Europe/Athens'),
@@ -36,6 +39,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
       WorldTime('Nairobi','kenya','Africa/Nairobi'),
       WorldTime('Chicago','united-states-of-america','America/Chicago'),
       WorldTime('NewYork','united-states-of-america','America/New_York'),
+      WorldTime('Tokyo', 'japan', 'Asia/Tokyo'),
       WorldTime('Seoul','south-korea','Asia/Seoul'),
       WorldTime('Jakarta','indonesia','Asia/Jakarta'),
 	  ];
@@ -43,10 +47,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
     void updateTime(int index) async {
       WorldTime worldTime = locations[index];
       await worldTime.getTime();
-      final timeModel = Provider.of<TimeModel>(context, listen: false);
       timeModel.time = worldTime;
-      //navigate to home screen
-      Navigator.pop(context);
     }
 
     debugPrint('Choose location build function run');
@@ -54,7 +55,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blue[800],
-        title: Text('Choose a Location'),
+        title: const Text('Choose a Location'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -62,7 +63,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
         itemCount: locations.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
             child: Card(
               child: ListTile(
                 title: Text(locations[index].location),
@@ -71,6 +72,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
                 ),
                 onTap: () {
                   updateTime(index);
+                  //navigate to home screen
+                  Navigator.pop(context);
                 },
               ),
             ),

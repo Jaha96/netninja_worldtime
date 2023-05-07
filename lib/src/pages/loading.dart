@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:netninja_worldtime/src/models/time_model.dart';
 import 'package:netninja_worldtime/src/services/world_time.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -18,25 +16,26 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
 
   String time = 'Loading...';
+  late TimeModel timeModel;
 
   void setupWorldTime() async{
     WorldTime worldTime = WorldTime('Tokyo', 'japan', 'Asia/Tokyo');
     await worldTime.getTime();
-    final timeModel = Provider.of<TimeModel>(context, listen: false);
     timeModel.time = worldTime;
     Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
   void initState() {
-    print('Loading initstate function run');
+    debugPrint('Loading initstate function run');
     super.initState();
+    timeModel = Provider.of<TimeModel>(context, listen: false);
     setupWorldTime();
   }
 
   @override
   void dispose() {
-    print('Loading dispose function run');
+    debugPrint('Loading dispose function run');
     super.dispose();
   }
 
@@ -44,7 +43,7 @@ class _LoadingState extends State<Loading> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[900],
-      body: Center(
+      body: const Center(
         child: SpinKitFadingCircle(
           color: Colors.white,
           size: 80.0,
